@@ -3,22 +3,44 @@
 
 
 " CHF's vimrc
+" Plugins ---------- {{{
+if has("gui_running")                          "only add packages on a gui terminal.
+    if empty(glob("~/.vim/autoload/plug.vim")) " Load vim-plug if it doesn't yet exist
+        silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.github.com/junegunn/vim-plug/master/plug.vim
+        autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+    endif
+
+    call plug#begin('~/.vim/bundle')
+
+    Plug 'lifepillar/vim-solarized8'
+    Plug 'scrooloose/nerdtree'
+
+    call plug#end()
+    " Be sure to :PlugInstall
+endif
+" }}}
 
 " Essential QOL ----- {{{
-set nu
+set number
+set nocompatible
+set showcmd
+filetype plugin indent on
 syntax enable
+color solarized8_flat
 set hlsearch
 set incsearch 
+set ignorecase
+set smartcase
 set so=30
 set belloff=all
 set hidden
 set autoread
 set autowrite
-nnoremap , :
+nnoremap ; :
+let mapleader=" "
 nnoremap <ESC> :noh<cr><ESC>
 set foldmethod=marker
 inoremap jj <ESC>
-inoremap kk <ESC>
 
 nnoremap k gk
 nnoremap j gj
@@ -28,24 +50,22 @@ if has('gui_running')
 endif
 " }}}
 
-" Remaps using space ----{{{
-nnoremap <Space><Space> :!
-nnoremap <Space>bb :b<Space>
-nnoremap <Space>bd :bdelete<Space>
-nnoremap <Space>bn :bn<cr>
-nnoremap <Space>bp :bp<cr>
-nnoremap <Space>t :Vexplore<cr>
-nnoremap <Space>pc :make
-nnoremap <Space>sf :%s//gc<left><left><Left>
-nnoremap <Space>sp :!<up>
-nnoremap <Space>w <C-w>
+" Global remaps using leader ----{{{
+nnoremap <leader>; :
+nnoremap <leader>: :!
+nnoremap <leader><leader> <C-^>
+nnoremap <leader>bb :b<Space>
+nnoremap <leader>bd :bdelete<Space>
+nnoremap <leader>bn :bn<cr>
+nnoremap <leader>bp :bp<cr>
+nnoremap <leader>n :NERDTreeToggle<cr>
+nnoremap <leader>pc :make
+nnoremap <leader>sr :%s//gc<left><left><Left>
+nnoremap <leader>w <C-w>
 " }}}
 
 " Tab Management ----- {{{
 if has("autocmd")
-    " Use filetype detection and automatic indenting
-    filetype plugin indent on
-
     " Use actual tab chars in makefiles
     autocmd FileType make set tabstop=8 shiftwidth=8 softtabstop=0 noexpandtab
 endif
@@ -57,20 +77,21 @@ set softtabstop=4
 set expandtab
 " }}}
 
-" For netrw ==== {{{
-let g:netrw_liststyle=3
-let g:netrw_browse_split=4
-let g:netrw_altv=1
-let g:netrw_winsize=20
-" }}}
-
 " Statusline ==== {{{
 set laststatus=2
 set statusline=
-set statusline+=%{getcwd()}
-set statusline+=\ %F
+set statusline+=%#StatusLineTermNC#
+set statusline+=\ [%n]
+set statusline+=\ %{getcwd()}/
+set statusline+=%*
+set statusline+=%f
 set statusline+=%=
-set statusline+=
+set statusline+=\ %y
+set statusline+=\ [%{&mod?'+':'-'}]
+set statusline+=\ (%{strftime('%H:%M')})
+set statusline+=\ 0x%B
+set statusline+=%#DiffChange#
+set statusline+=\ %p%%\ [%l/%L] 
 " }}}
 
 " Functions ==== {{{
