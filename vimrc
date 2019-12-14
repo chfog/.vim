@@ -1,7 +1,4 @@
 
-
-
-
 " CHF's vimrc
 " Plugins ---------- {{{
 if empty(glob("~/.vim/autoload/plug.vim")) " Load vim-plug if it doesn't yet exist
@@ -51,7 +48,7 @@ color desert
 set hlsearch
 nohlsearch
 set incsearch
-if has('gui')
+if has('gui_running')
     set cursorline
 endif
 set ignorecase
@@ -63,8 +60,9 @@ set hidden
 set autoread
 set autowrite
 let mapleader=" "
-set foldmethod=marker
-set foldminlines=5
+setglobal foldmethod=marker
+set foldminlines=3
+nnoremap S <nop>
 
 if (&termencoding ==# 'utf-8' || &encoding ==# 'utf-8') && v:version >= 700
     let &g:listchars = "tab:\u25c0 \u25b6,trail:\u2423,extends:\u21c9,precedes:\u21c7,nbsp:\u00b7"
@@ -86,6 +84,10 @@ if has('gui_running')
     set guifont=Menlo-Regular:h12
     let g:solarized_statusline="flat"
     colorscheme solarized8
+else
+    let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+    let &t_SR = "\<Esc>]50;CursorShape=2\x7"
+    let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 endif
 
 
@@ -140,6 +142,7 @@ endif
 " Global remaps using leader ----{{{
 
 nnoremap <leader><leader> <C-^>
+nnoremap <leader>t :!
 nnoremap <leader>n :NERDTreeFocus<CR>
 nnoremap <leader>ff :Files<CR>
 nnoremap <leader>fg :GFiles<CR>
@@ -245,10 +248,15 @@ if has('autocmd')
         " Source vimrc on save
         autocmd bufwritepost vimrc source $MYVIMRC
         " Reset statusline when switching buffers or working directory
-        autocmd BufEnter,DirChanged * call SetStatusLine()
+        autocmd BufEnter * call SetStatusLine()
+        if v:version >= 800
+            autocmd DirChanged * call SetStatusLine()
+        endif
         "set filetype-specific modifications
         autocmd Filetype python setlocal foldmethod=indent
-        autocmd FileType make setlocal tabstop=8 shiftwidth=8 softtabstop=0 noexpandtab
+        autocmd FileType make setlocal list tabstop=8 shiftwidth=8 softtabstop=0 noexpandtab
+        autocmd FileType plaintex set ft=tex
+        autocmd FileType tex nnoremap \lm <silent> :botright terminal latexmk %<cr><C-w>k | nnoremap \lc :!latexmk -c %<cr>
         "set cursorline local to window
         autocmd BufWInEnter,WinEnter * setlocal cursorline
         autocmd WinLeave * setlocal nocursorline
