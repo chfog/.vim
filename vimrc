@@ -186,19 +186,19 @@ function! SwapSO()
     endif
 endfunction
 
-function GetModMarker()
+function! GetModMarker()
     if &modifiable
         return &mod?s:modstr:s:umodstr
     else
         return ""
 endfunction
 
-function WinMaximize()
+function! WinMaximize()
     resize
     vertical resize
 endfunction
 
-function SetStatusLine()
+function! SetStatusLine()
     set statusline=
     setlocal statusline+=\ [%n]%<
     " check if current file is child of cwd
@@ -223,7 +223,7 @@ function SetStatusLine()
 endfunction
 
 
-function SplitIfOneWin(buffer)
+function! SplitIfOneWin(buffer)
     if winnr("$") == 1
         execute "vertical split " . a:buffer
     else
@@ -235,9 +235,9 @@ endfunction
 
 " Commands ----- {{{
 
-command SwapSO :silent call SwapSO()
-command SwapBG :silent call SwapBG()
-command CD execute "cd " . expand("%:p:h")
+command! SwapSO :silent call SwapSO()
+command! SwapBG :silent call SwapBG()
+command! CD execute "cd " . expand("%:p:h")
 
 " }}}
 
@@ -249,7 +249,7 @@ if has('autocmd')
         autocmd bufwritepost vimrc source $MYVIMRC
         " Reset statusline when switching buffers or working directory
         autocmd BufEnter * call SetStatusLine()
-        if v:version >= 800
+        if exists('##DirChanged')
             autocmd DirChanged * call SetStatusLine()
         endif
         "set filetype-specific modifications
