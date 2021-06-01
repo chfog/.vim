@@ -12,6 +12,7 @@ Plug 'lifepillar/vim-solarized8'
 Plug 'scrooloose/nerdtree'
 Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf.vim'
+Plug 'craigemery/vim-autotag'
 
 call plug#end()
 " Be sure to :PlugInstall
@@ -63,6 +64,7 @@ let mapleader=" "
 setglobal foldmethod=marker
 set foldminlines=3
 nnoremap S <nop>
+set foldlevelstart=20
 
 if (&termencoding ==# 'utf-8' || &encoding ==# 'utf-8') && v:version >= 700
     let &g:listchars = "tab:\u25c0 \u25b6,trail:\u2423,extends:\u21c9,precedes:\u21c7,nbsp:\u00b7"
